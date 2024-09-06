@@ -12,7 +12,7 @@ getlink(id) async {
   // print(info2[2].url);
 
   var info = manifest.audioOnly.withHighestBitrate();
-  // print(info.url);
+  print(info.url);
 
   // Pipe all the content of the stream into the file.
 
@@ -70,5 +70,19 @@ void launchInstagram() async {
   } else {
     // If the app is not installed, open the Instagram profile in a browser.
     await launchUrl(instagramUrl, mode: LaunchMode.inAppBrowserView);
+  }
+}
+
+launchBuyMeACoffee() async {
+  // Replace "USERNAME" with the Instagram username or "instagram://user?username=USERNAME"
+  // with the appropriate Instagram profile URL scheme.
+  Uri coffeeUrl = Uri.parse('https://www.buymeacoffee.com/cuvertino');
+
+  // Check if the Instagram app is installed, if not, open in a browser.
+  if (await canLaunchUrl(coffeeUrl)) {
+    await launchUrl(coffeeUrl);
+  } else {
+    // If the app is not installed, open the Instagram profile in a browser.
+    await launchUrl(coffeeUrl, mode: LaunchMode.inAppBrowserView);
   }
 }

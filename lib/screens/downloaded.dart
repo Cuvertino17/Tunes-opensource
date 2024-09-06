@@ -1,7 +1,10 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:musichub/helpers/constants.dart';
+import 'package:musichub/miniplayer.dart';
+import 'package:musichub/screens/player.dart';
 import 'package:musichub/themes/colors.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -32,6 +35,32 @@ class _alreadyState extends State<already> {
 
     // Only call update the UI if application has all required permissions.
     _hasPermission ? setState(() {}) : null;
+  }
+
+  MediaItem _songToMediaItem(SongModel song) {
+    return MediaItem(
+      id: song.id.toString(),
+      album: song.album,
+      title: song.title,
+      artist: song.artist,
+      duration: Duration(milliseconds: song.duration ?? 0),
+      extras: {'url': song.uri}, // Ensure 'url' key is used correctly
+    );
+  }
+
+// Function to add list of SongModel to queue
+  Future<void> addSongsToQueue(List<SongModel> songs, index) async {
+    print(songs);
+    // Convert SongModel list to MediaItem list
+    await audioHandler.stop();
+    audioHandler.queue.value.clear();
+
+    final mediaItems = songs.map(_songToMediaItem).toList();
+
+    // Add MediaItem list to the queue
+    await audioHandler.addQueueItems(mediaItems);
+    await audioHandler.skipToQueueItem(index);
+    await audioHandler.play();
   }
 
   @override
@@ -74,6 +103,16 @@ class _alreadyState extends State<already> {
                     itemCount: item.data!.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        onTap: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => songinfo()));
+                          // print(item.data);
+
+                          // print(audioHandler.queue.value);
+
+                          addSongsToQueue(item.data!, index);
+                          // audioHandler.play();
+                        },
                         title: Text(item.data![index].title,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -95,7 +134,7 @@ class _alreadyState extends State<already> {
                             controller: _audioQuery,
                             id: item.data![index].id,
                             type: ArtworkType.AUDIO,
-                            nullArtworkWidget: Image.asset('assets/dummy2.png'),
+                            nullArtworkWidget: Image.asset('assets/dummy.png'),
                           ),
                         ),
                       );
@@ -156,6 +195,7 @@ class _alreadyState extends State<already> {
       //             );
       //           });
       //     }),
+      bottomNavigationBar: MiniPlayer(),
     );
   }
 

@@ -1,89 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:musichub/helpers/constants.dart';
+import 'package:musichub/miniplayer.dart';
 import 'package:musichub/themes/colors.dart';
 
-class settings extends StatefulWidget {
-  const settings({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
-  State<settings> createState() => _settingsState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _settingsState extends State<settings> {
-  String quality = Audiosetting.get('quality') == null
-      ? 'High'
-      : Audiosetting.get('quality');
+class _SettingsPageState extends State<SettingsPage> {
+  String quality = Audiosetting.get('quality') ?? 'High';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('settings'),
-        actions: [
-          TextButton(
-              onPressed: () {
-                print(Audiosetting.get('quality'));
-                Audiosetting.put('quality', quality);
-
-                setState(() {});
-              },
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    color: Colors.green,
-                  ),
-                  height: 35,
-                  width: 60,
-                  child: const Center(
-                      child: Text(
-                    'save',
-                    style: TextStyle(color: Colors.white),
-                  ))))
-        ],
+        title: const Text(
+          'Settings',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
+        elevation: 0,
       ),
       backgroundColor: black,
       body: Padding(
-        padding: const EdgeInsets.only(top: 30),
-        child: Column(children: [
-          const Text(
-            'download quality',
-            style: TextStyle(fontSize: 18),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          ToggleOptions(
-            onOptionChanged: (value) {
-              setState(() {
-                quality = value;
-              });
-            },
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-
-          // SizedBox(
-          //   height: 30,
-          // ),
-          // const Text(
-          //   'base color',
-          //   style: TextStyle(fontSize: 18),
-          // ),
-          // const SizedBox(
-          //   height: 15,
-          // ),
-          // ToggleColorOptions(
-          //   options: [Colors.green, Colors.red, Colors.yellow],
-          //   onOptionChanged: (color) {
-          //     print('Selected Color: $color');
-          //   },
-          // )
-        ]),
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Download Quality',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 15),
+            ToggleOptions(
+              onOptionChanged: (value) {
+                setState(() {
+                  quality = value;
+                });
+              },
+            ),
+            const Spacer(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Audiosetting.put('quality', quality);
+                    // Fluttertoast.showToast(
+                    //   msg: "New settings are saved",
+                    //   toastLength: Toast.LENGTH_SHORT,
+                    //   gravity: ToastGravity.BOTTOM,
+                    //   backgroundColor: Colors.green,
+                    //   textColor: Colors.white,
+                    //   fontSize: 16.0,
+                    // );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Save Settings',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
+      bottomNavigationBar: MiniPlayer(),
     );
   }
 }
@@ -91,20 +94,19 @@ class _settingsState extends State<settings> {
 class ToggleOptions extends StatefulWidget {
   final ValueChanged<String> onOptionChanged;
 
-  ToggleOptions({required this.onOptionChanged});
+  const ToggleOptions({required this.onOptionChanged});
+
   @override
   _ToggleOptionsState createState() => _ToggleOptionsState();
 }
 
 class _ToggleOptionsState extends State<ToggleOptions> {
-  String selectedOption = Audiosetting.get('quality') == null
-      ? 'High'
-      : Audiosetting.get('quality');
+  String selectedOption = Audiosetting.get('quality') ?? 'High';
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         buildOption('Low'),
         buildOption('Medium'),
@@ -123,92 +125,22 @@ class _ToggleOptionsState extends State<ToggleOptions> {
           widget.onOptionChanged(selectedOption);
         });
       },
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.symmetric(horizontal: 8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isActive
-              ? const Color.fromARGB(255, 33, 149, 243).withOpacity(0.3)
-              : Colors.transparent,
+          color: isActive ? Colors.blue.withOpacity(0.3) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isActive ? Colors.blue : Colors.white,
+            width: 1,
+          ),
         ),
         child: Text(
           option,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ToggleColorOptions extends StatefulWidget {
-  final List<Color> options;
-  final ValueChanged<Color> onOptionChanged;
-
-  ToggleColorOptions({required this.options, required this.onOptionChanged});
-
-  @override
-  _ToggleColorOptionsState createState() => _ToggleColorOptionsState();
-}
-
-class _ToggleColorOptionsState extends State<ToggleColorOptions> {
-  Color selectedOption = Colors.green;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        buildOption(Colors.green),
-        buildOption(Colors.red),
-        buildOption(Colors.yellow),
-      ],
-    );
-  }
-
-  Widget buildOption(Color option) {
-    bool isActive = selectedOption == option;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedOption = option;
-          widget.onOptionChanged(selectedOption);
-        });
-      },
-      child: Container(
-        // width: 50,
-        height: 50,
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-            color: isActive
-                ? const Color.fromARGB(47, 255, 255, 255)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            border: isActive
-                ? null
-                : Border.all(color: const Color.fromARGB(138, 255, 255, 255))),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Icon(
-                FeatherIcons.arrowDownCircle,
-                color: option,
-                size: 20,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Icon(
-                FeatherIcons.playCircle,
-                color: option,
-                size: 20,
-              )
-            ],
+          style: TextStyle(
+            color: isActive ? Colors.blue : Colors.white,
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ),
