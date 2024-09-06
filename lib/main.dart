@@ -121,52 +121,6 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           scaffoldBackgroundColor: black),
       home: LandingPage(),
-      // home: FutureBuilder<bool>(
-      //   future: checkLoginBoxContent(), // Check if login box has content
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return const Scaffold(
-      //         body: Center(
-      //           child: CircularProgressIndicator(),
-      //         ),
-      //       );
-      //     } else {
-      //       if (snapshot.hasData && snapshot.data == true) {
-      //         // If login box has content, navigate to home
-      //         return const home();
-      //       } else {
-      //         // If login box is empty, navigate to login page
-      //         return AuthScreen();
-      //       }
-      //     }
-      //   },
-      // ),
     );
   }
 }
-
-// Future<bool> checkLoginBoxContent() async {
-//   final hasContent = LoginBox.isNotEmpty;
-//   return hasContent;
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MultiProvider(
-//       providers: [
-//         ChangeNotifierProvider(
-//             create: (_) => ThemeProvider()), // Provide ThemeProvider
-//       ],
-//       child: Consumer<ThemeProvider>(
-//         builder: (context, themeProvider, child) {
-//           return MaterialApp(
-//             debugShowCheckedModeBanner: false,
-//             theme: themeProvider.currentTheme, // Apply the current theme
-//             home: LandingPage(), // Your main screen
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
