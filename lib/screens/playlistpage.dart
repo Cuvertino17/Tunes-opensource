@@ -32,6 +32,45 @@ class _PlaylistPageState extends State<PlaylistPage> {
         backgroundColor: Colors.transparent,
         title: Text(widget.name),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        height: 300,
+                        child: ListView(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: Center(child: Text(widget.name)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                            child: ListTile(
+                              onTap: () {
+                                final int playlistIndex = playlistBox.values
+                                    .toList()
+                                    .indexWhere((playlist) =>
+                                        playlist['playlistName'] ==
+                                        widget.name);
+                                playlistBox.deleteAt(playlistIndex);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              leading: const Icon(
+                                Icons.delete_rounded,
+                                color: Colors.red,
+                              ),
+                              title: const Text("Delete this playlist"),
+                            ),
+                          ),
+                        ]),
+                      );
+                    });
+              },
+              icon: const Icon(Icons.more_vert))
+        ],
       ),
       body: Column(
         children: [

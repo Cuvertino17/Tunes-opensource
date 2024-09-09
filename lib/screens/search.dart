@@ -316,6 +316,16 @@ class _homeState extends State<home> {
                 itemCount: _suggestions.length,
                 itemBuilder: (context, index) {
                   return ListTile(
+                    leading: const Icon(
+                      CupertinoIcons.search,
+                      size: 20,
+                    ),
+                    trailing: GestureDetector(
+                      onTap: () async {
+                        _textEditingController.text = _suggestions[index];
+                      },
+                      child: const Icon(CupertinoIcons.arrow_up_right),
+                    ),
                     title: Text(_suggestions[index]),
                     onTap: () async {
                       _textEditingController.text = _suggestions[index];

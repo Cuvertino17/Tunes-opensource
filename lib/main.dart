@@ -17,11 +17,7 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('login');
   await Hive.initFlutter();
-  const supabaseUrl = 'https://vlcaeklcsipijbnxsqba.supabase.co';
-  await Supabase.initialize(
-      url: supabaseUrl,
-      anonKey:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsY2Fla2xjc2lwaWpibnhzcWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTk4MTY0NTIsImV4cCI6MjAzNTM5MjQ1Mn0.X0-EmSVxp8tIAcLmxSGmGtTUAW5mPsoqW3glzGg0x1Q");
+
   // await Hive.openBox('saved');
   await Hive.openBox('history');
   await Hive.openBox('liked');
